@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="house.demo.Mapper.HouseMapper">
+
+    <select id="getindex" parameterType="QueryVo" resultMap="myBed">
+        select * from bednumber where state=0 order by price desc limit 0,6
+    </select>
+
+    <resultMap id="myBed" type="BedNumber">
+        <id column="bid" property="bid"/>
+        <result column="number" property="number"/>
+        <result column="state" property="state"/>
+        <result column="price" property="price"/>
+        <result column="area" property="area"/>
+        <result column="sun" property="sun"/>
+        <result column="star" property="star"/>
+        <result column="latedate" property="latedate"/>
+        <association property="houses" javaType="houses">
+            <id column="hid" property="hid"/>
+        </association>
+        <association property="user" javaType="user">
+            <id column="uid" property="uid"/>
+        </association>
+    </resultMap>
+
+    <select id="getsome" resultMap="myBed">
+        select * from bednumber b inner join houses h on h.hid=b.hid
+        <if test="much2!=-1 and much2!=null">
+            and b.price &gt;= #{much2}
+        </if>
+        <if test="much!=-1">
+            and b.price &lt;= #{much}
+        </if>
+        <if test="high!=-1">
+            and h.high &lt;= #{high}
+        </if>
+        <if test="livetype !=-1">
+            and h.livetype=#{livetype}
+        </if>
+        <if test="roomtype!=null and roomtype!=''">
+            and h.roomtype=#{roomtype}
+        </if>
+        <if test="high2!=-1 and high2!=null">
+            and h.high &gt;= #{high2}
+        </if>
+        and b.state=0
+        <if test="order!=null and order!=''">          <!--这里不设判断也可以，因为数据库order by null和"null"都是可以且表示默认排序的-->
+            order by b.${order}
+        </if>
+        limit #{StartIndex},#{Pagesize}
+    </select>
+
+    <select id="getsomecount" parameterType="QueryVo" resultType="Integer">
+        select count(*) from bednumber b inner join houses h on h.hid=b.hid
+        <if test="much2!=-1 and much2!=null">
+            and b.price &gt;= #{much2}
+        </if>
+        <if test="much!=-1">
+            and b.price &lt;=#{much}
+        </if>
+        <if test="high!=-1">
+            and h.high &lt;= #{high}
+        </if>
+        <if test="livetype !=-1">
+            and h.livetype=#{livetype}
+        </if>
+        <if test="roomtype!=null and roomtype!=''">
+            and h.roomtype=#{roomtype}
+        </if>
+        <if test="high2!=-1 and high2!=null">
+            and h.high &gt;= #{high2}
+        </if>
+        and b.state=0
+    </select>
+
+</mapper>

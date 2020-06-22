@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<!-- Bootstrap -->
+<link th:href="@{plugins/font-awesome/css/font-awesome.min.css}" rel="stylesheet">
+<link th:href="@{plugins/slick/slick.css}" rel="stylesheet">
+<link th:href="@{plugins/slick-nav/slicknav.css}" rel="stylesheet">
+<link th:href="@{plugins/wow/animate.css}" rel="stylesheet">
+<link th:href="@{assets/css/bootstrap.css}" rel="stylesheet">
+<link th:href="@{assets/css/theme.css}" rel="stylesheet">
+
+<body>
+<header id="site-header">
+    <div id="site-header-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="clearfix">
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="clearfix">
+                        <a class="btn btn-warning btn-lg header-btn hidden-sm" href="/login"
+                           th:if="${session.user}eq null" th:href="@{/login}">登陆</a>
+                        <a class="btn btn-warning btn-lg header-btn hidden-sm" href="/register"
+                           th:if="${session.user}eq null" th:href="@{/register}">注册</a>
+                        <div class="currency-in-header">
+                            <i class="fa fa-flag"></i>
+                            <label th:if="${session.user}eq null"> 当前状态：未登录 </label>
+                            <span th:if="${session.user}ne null" style="color: red;size: 5px">[[${session.user.name}]], 您好</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a th:href="@{/loginout}" th:if="${session.user} ne null"
+                               style="color: blue;size:5px">切换用户</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <figure id="site-logo">
+                    <a href="index.html"><img th:src="@{/assets/images/logo3.jpg}" alt="Logo"></a>
+                </figure>
+            </div>
+            <div class="col-md-6 col-sm-8">
+                <nav id="site-nav" class="nav navbar-default">
+                    <ul class="nav navbar-nav">
+                        <li><a href="" th:href="@{/}"><font size="5">首页</font></a></li>
+                        <li><a href="search" th:href="@{/findhouse&roomtype=&high=-1&much=-1&livetype=-1&order=&num=1}"><font
+                                size="5">查找</font></a></li>
+                        <li><a href="MyMessage" th:href="@{/MyMessage}"><font size="5">个人信息</font></a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-3 col-sm-4">
+                <div class="contact-in-header clearfix">
+                    <i class="fa fa-mobile"></i>
+                    <span>
+		                        	联系我们
+		                        <br>
+		                    <strong>187 9204 1765</strong>
+		                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<a class="btn btn-default" href="#" role="button" style="position:fixed;right:0;bottom:0">
+    回到顶部
+</a>
+<hr/>
+<div class="container">
+    <form action="#" id="adv-search-form" class="clearfix">
+        <fieldset>
+            <input type="hidden" th:value="${PageModel.currentPageNum}" th:name="num">
+            <select name="much" id="much">
+                <option value="-1" id="m-1" th:selected="${vo.much==-1}">价格不限</option>
+                <option value="1900" id="m1900" th:selected="${vo.much==1900}">1900以下/月</option>
+                <option value="2500" id="m2500" th:selected="${vo.much==2500}">1900-2500/月</option>
+                <option value="4000" id="m4000" th:selected="${vo.much==4000}">2500-4000/月</option>
+                <option value="4800" id="m4800" th:selected="${vo.much==4800}">4000-4800/月</option>
+                <option value="4801" id="m4801" th:selected="${vo.much==4801}">4800以上/月</option>
+            </select>
+            <select name="roomtype" id="roomtype">
+                <option value="" id="s-1" th:selected="${vo.roomtype}==''">户型不限</option>
+                <option value="一室一厅" id="s1" th:selected="${vo.roomtype}=='一室一厅'">一室一厅</option>
+                <option value="两室一厅" id="s2" th:selected="${vo.roomtype}=='两室一厅'">两室一厅</option>
+                <option value="三室一厅" id="s3" th:selected="${vo.roomtype}=='三室一厅'">三室一厅</option>
+                <option value="四室一厅" id="s4" th:selected="${vo.roomtype}=='四室一厅'">四室一厅</option>
+            </select>
+            <select id="high" name="high">
+                <option value="-1" id="h-1" th:selected="${vo.high}==-1">楼层不限</option>
+                <option value="1" id="h1" th:selected="${vo.high}==1">1~5楼</option>
+                <option value="2" id="h2" th:selected="${vo.high}==2">6~10楼</option>
+                <option value="3" id="h3" th:selected="${vo.high}==3">11~15楼</option>
+                <option value="4" id="h4" th:selected="${vo.high}==4">16楼以上</option>
+            </select>
+            <select id="livetype" name="livetype">
+                <option value="-1" id="t-1" th:selected="${vo.livetype}==-1">种类不限</option>
+                <option value="0" id="t0" th:selected="${vo.livetype}==0">整租</option>
+                <option value="1" id="t1" th:selected="${vo.livetype}==1">合租</option>
+            </select>
+        </fieldset>
+        <button id="search" type="button" name="search" class="btn btn-default btn-lg text-right">查找<br
+                class="hidden-sm hidden-xs"></button>
+    </form>
+</div>
+</div>
+<!--搜索结果-->
+<section id="property-listing">
+    <header class="section-header text-center">
+        <div class="container">
+            <div class="pull-right">
+                <select name="order" id="order">
+                    <option value="">默认</option>
+                    <!--这里虽然设置的value为null,但是传到后台的值是字符串"null",当不指定value时，value为<option></option>中间值，只有不指定value，以及<option></option>中间为空传的值才是null-->
+                    <option value="area" id="bt1" th:selected="${vo.order=='area'}">面积增序</option>
+                    <option value="price" id="bt2" th:selected="${vo.order=='price'}">价格增序</option>
+                </select>
+                <input type="button" name="search" value="确定">
+            </div>
+        </div>
+    </header>
+    <div class="container section-layout">
+        <div class="row">
+            <div class="col-lg-4 col-sm-6 layout-item-wrap" th:if="${PageModel.list ne null}"
+                 th:each="bednumber:${PageModel.list}">
+                <article class="property layout-item clearfix">
+                    <figure class="feature-image">
+                        <a class="clearfix zoom" href="single-property.html"
+                           th:href="@{/getdetails&bid=}+${bednumber.bid}"><img data-action="zoom"
+                                                                               src="assets/images/property/1.jpg"
+                                                                               th:src="@{${bednumber.houses.images}+'1.jpg'}"
+                                                                               alt="Property Image"></a>
+                        <span class="btn btn-warning btn-sale">for sale</span>
+                    </figure>
+
+                    <div class="property-contents clearfix">
+                        <header class="property-header clearfix">
+                            <div class="pull-left">
+                                <h6 class="entry-title"><a href="single-property.html"
+                                                           th:href="@{/getdetails&bid=}+${bednumber.bid}"><span
+                                        th:text="${bednumber.houses.livetype}==0?整租·:合租·"></span><span
+                                        th:text="${bednumber.houses.roomtype}"></span></a></h6>
+                                <span class="property-location"><i class="fa fa-map-marker"
+                                                                   th:text="${bednumber.houses.location}"></i><i
+                                        th:text="${bednumber.number}==0?'':${bednumber.number}+'号床'"></i></span>
+                            </div>
+                            <button class="btn btn-default btn-price pull-right">
+                                <strong>￥[[${bednumber.price}]]</strong></button>
+                        </header>
+                        <div class="property-meta clearfix">
+                            <span><i class="fa fa-arrows-alt" th:text="${bednumber.area}+'㎡'"></i> </span>
+                            <span><i class="fa fa-bed" th:text="有热水器"></i> </span>
+                            <span><i class="fa fa-bathtub" th:text="有厨房"></i> </span>
+                            <span><i class="fa fa-cab" th:text="${bednumber.sun}==1?'有阳台':'无阳台'"></i> </span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <h1 style=""></h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <div th:if="${PageModel.list}eq null"><h1 style="color: red">没有该条件下的房子</h1></div>
+        </div>
+        <ul id="pagination" class="text-center clearfix" th:if="${PageModel.list}ne null">
+            <li th:class="${PageModel.currentPageNum}==1?'disabled':''"><a href="#"
+                                                                           th:href="@{${PageModel.url}+'1'}">首页</a></li>
+            <li th:class="${PageModel.currentPageNum}==1?'disabled':''"><a href="#"
+                                                                           th:href="@{${PageModel.url}+${PageModel.prePageNum}}">上一页</a>
+            </li>
+            <li th:each="n:${#numbers.sequence({PageModel.startPage},{PageModel.endPage})}"
+                th:class="${PageModel.currentPageNum}==${n}?'disabled':''"><a href="#"
+                                                                              th:href="@{${PageModel.url}+${n}}"
+                                                                              th:text="${n}"></a></li>
+            <li th:class="${PageModel.currentPageNum}==${PageModel.totalPageNum}?'disabled':''"><a href="#"
+                                                                                                   th:href="@{${PageModel.url}+${PageModel.nextPageNum}}">下一页</a>
+            </li>
+            <li th:class="${PageModel.currentPageNum}==${PageModel.totalPageNum}?'disabled':''"><a href="#"
+                                                                                                   th:href="@{${PageModel.url}+${PageModel.totalPageNum}}">尾页</a>
+            </li>
+        </ul>
+    </div>
+</section>
+<span th:utext="${PageModel.list}ne null?'':'<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>'"></span>
+<div class="container" style="background-color:lightgray">
+    <div class="col-lg-2">
+        <ul>
+            <li>
+                <h3>服务定制</h3>
+            </li>
+            <li>
+                <a href="#" class="link-item">功能详情</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-lg-2">
+        <ul>
+            <li>
+                <h3>解决方案</h3>
+            </li>
+            <li>
+                <a href="#">智慧社区解决方案</a>
+            </li>
+            <li>
+                <a href="#">物业定制化解决方案</a>
+            </li>
+            <li>
+                <a href="#">智慧家庭解决方案</a>
+            </li>
+            <li>
+                <a href="#">物业移动品质管理系统</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-lg-2">
+        <ul>
+            <li>
+                <h3>平台服务</h3>
+            </li>
+            <li>
+                <a href="#">小区管家</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-lg-2">
+        <ul>
+            <li>
+                <h3>合作加盟</h3>
+            </li>
+            <li>
+                <a href="#">物业合作</a>
+            </li>
+            <li>
+                <a href="#">代理商合作</a>
+            </li>
+            <li>
+                <a href="#">广告投放</a>
+            </li>
+            <li>
+                <a href="#">商家入驻</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-lg-2">
+        <ul>
+            <li>
+                <h3>职业发展</h3>
+            </li>
+            <li>
+                <a href="#">人才理念</a>
+            </li>
+            <li>
+                <a href="#">培养人才</a>
+            </li>
+            <li>
+                <a href="#">加入我们</a>
+            </li>
+        </ul>
+    </div>
+    <div class="col-lg-2">
+        <h3>关于我们</h3>
+        <ul>
+            <li>
+                <a href="#">公司简介</a>
+            </li>
+            <li>
+                <a href="#">企业文化</a>
+            </li>
+            <li>
+                <a href="#">品牌优势</a>
+            </li>
+            <li>
+                <a href="#">公司治理</a>
+            </li>
+            <li>
+                <a href="#">联系我们</a>
+            </li>
+        </ul>
+    </div>
+    <div class="footer-copyright" align="center">
+        <span>Copyright©2012-2016 All Rights Reserved 　深圳市齐家互联网科技股份有限公司版权所有 <a style="color:black;" href="#">粤ICP备12069240号</a></span>
+    </div>
+</div>
+</div>
+</body>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery-1.11.0.js}"></script>
+<script src="assets/js/bootstrap.min.js" th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script>
+    $("[name='search']").click(function () {
+        var much = $("#much").val();
+        var roomtype = $("#roomtype").val();
+        var livetype = $("#livetype").val();
+        var high = $("#high").val();
+        var order = $("#order").val();
+        window.location.href = "/House/findhouse&roomtype=" + roomtype + "&high=" + high + "&much=" + much + "&livetype=" + livetype + "&order=" + order + "&num=" + [[${PageModel.currentPageNum}]];
+    })
+</script>
+</html>

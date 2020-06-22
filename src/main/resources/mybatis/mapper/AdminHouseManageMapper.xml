@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="house.demo.Mapper.AdminHouseManageMapper">
+
+    <select id="searchhouselist" parameterType="QueryVo" resultMap="myBed">
+        select * from bednumber b inner join houses h on h.hid=b.hid
+        <if test="much2!=-1 and much2!=null">
+            and b.price &gt;= #{much2}
+        </if>
+        <if test="much!=-1">
+            and b.price &lt;= #{much}
+        </if>
+        <if test="hid!=null and hid!=''">
+            and h.hid = #{hid}
+        </if>
+        <if test="location !=null and location!=''">
+            and h.location like concat("%",#{location},"%")
+        </if>
+        <if test="state!=null and state!=-1">
+            and b.state=#{state}
+        </if>
+        limit #{StartIndex},#{Pagesize}
+    </select>
+
+    <select id="searchhousecount" parameterType="QueryVo" resultType="Integer">
+        select count(*) from bednumber b inner join houses h on h.hid=b.hid
+        <if test="much2!=-1 and much2!=null">
+            and b.price &gt;= #{much2}
+        </if>
+        <if test="much!=-1">
+            and b.price &lt;= #{much}
+        </if>
+        <if test="hid!=null and hid!=''">
+            and h.hid = #{hid}
+        </if>
+        <if test="location !=null and location!=''">
+            and h.location like concat("%",#{location},"%")
+        </if>
+        <if test="state!=null and state!=-1">
+            and b.state=#{state}
+        </if>
+    </select>
+
+    <select id="getSameBed" parameterType="Map" resultType="Integer">
+        select count(*) from bednumber where hid=#{hid} and number=#{number}
+        <if test="bid!=null and bid!=''">
+            and bid!=#{bid}
+        </if>
+    </select>
+
+    <resultMap id="myBed" type="BedNumber">
+        <id column="bid" property="bid"/>
+        <result column="number" property="number"/>
+        <result column="state" property="state"/>
+        <result column="price" property="price"/>
+        <result column="area" property="area"/>
+        <result column="sun" property="sun"/>
+        <result column="star" property="star"/>
+        <result column="latedate" property="latedate"/>
+        <association property="houses" javaType="houses">
+            <id column="hid" property="hid"/>
+        </association>
+        <association property="user" javaType="user">
+            <id column="uid" property="uid"/>
+        </association>
+    </resultMap>
+
+    <update id="updatebed" parameterType="BedNumber">
+        update bednumber set number=#{number},price=#{price},area=#{area},sun=#{sun} where bid=#{bid}
+    </update>
+</mapper>

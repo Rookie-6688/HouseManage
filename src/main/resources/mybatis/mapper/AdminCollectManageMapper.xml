@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="house.demo.Mapper.AdminCollectManageMapper">
+
+    <select id="SearchCollectCount" parameterType="QueryVo" resultType="Integer">
+        select count(*) from collections c
+        inner join user u on u.uid=c.uid
+        <if test="name!=null and name!=''">
+            and u.name like concat("%",#{name},"%")
+        </if>
+        inner join bednumber b on b.bid=c.bid
+        inner join houses h on h.hid=b.hid
+        <if test="location!=null and location!=''">
+            and h.location like concat("%",#{location},"%")
+        </if>
+    </select>
+
+    <select id="SearchCollectList" resultMap="myCollection" parameterType="QueryVo">
+        select c.cid,u.uid,b.bid from collections c
+        inner join user u on u.uid=c.uid
+        <if test="name!=null and name!=''">
+            and u.name like concat("%",#{name},"%")
+        </if>
+        inner join bednumber b on b.bid=c.bid
+        inner join houses h on h.hid=b.hid
+        <if test="location!=null and location!=''">
+            and h.location like concat("%",#{location},"%")
+        </if>
+    </select>
+
+    <select id="getCollectByCid" parameterType="String" resultMap="myCollection">
+        select * from collections where cid=#{cid}
+    </select>
+    <resultMap id="myCollection" type="Collections">
+        <id column="cid" property="cid"/>
+        <association property="user" javaType="user">
+            <id property="uid" column="uid"/>
+        </association>
+        <association property="bedNumber" javaType="Bednumber">
+            <id property="bid" column="bid"/>
+        </association>
+    </resultMap>
+
+</mapper>

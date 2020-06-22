@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<!-- Bootstrap -->
+<link th:href="@{assets/css/bootstrap.css}" rel="stylesheet">
+<link th:href="@{assets/css/theme.css}" rel="stylesheet">
+<link th:href="@{assets/css/common.css}" rel="stylesheet">
+<link th:href="@{assets/css/my_zone.css}" rel="stylesheet">
+
+<body>
+<header id="site-header">
+    <div id="site-header-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="clearfix">
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="clearfix">
+                        <a class="btn btn-warning btn-lg header-btn hidden-sm" href="/login"
+                           th:if="${session.user}eq null" th:href="@{/login}">登陆</a>
+                        <a class="btn btn-warning btn-lg header-btn hidden-sm" href="/register"
+                           th:if="${session.user}eq null" th:href="@{/register}">注册</a>
+                        <div class="currency-in-header">
+                            <i class="fa fa-flag"></i>
+                            <label th:if="${session.user}eq null"> 当前状态：未登录 </label>
+                            <span th:if="${session.user}ne null" style="color: red;size: 5px">[[${session.user.name}]], 您好</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a th:href="@{/loginout}" th:if="${session.user} ne null"
+                               style="color: blue;size:5px">切换用户</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <figure id="site-logo">
+                    <a href="index.html"><img th:src="@{/assets/images/logo3.jpg}" alt="Logo"></a>
+                </figure>
+            </div>
+            <div class="col-md-6 col-sm-8">
+                <nav id="site-nav" class="nav navbar-default">
+                    <ul class="nav navbar-nav">
+                        <li><a href="" th:href="@{/}"><font size="5">首页</font></a></li>
+                        <li><a href="search" th:href="@{/findhouse&roomtype=&high=-1&much=-1&livetype=-1&order=&num=1}"><font
+                                size="5">查找</font></a></li>
+                        <li><a href="MyMessage" th:href="@{/MyMessage}"><font size="5">个人信息</font></a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-3 col-sm-4">
+                <div class="contact-in-header clearfix">
+                    <i class="fa fa-mobile"></i>
+                    <span>
+		                        	联系我们
+		                        <br>
+		                    <strong>187 9204 1765</strong>
+		                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="area zone_cont clearfix" style="position: relative; z-index: 1;">
+    <!--公告-->
+    <div class="slideLeft">
+        <ul>
+            <li class="myStore"><b></b><a th:href="@{/MyMessage}">个人资料</a></li>
+            <li class="myLook"><b></b><a th:href="@{/MyCollections}" th:class="active">我的收藏</a></li>
+            <li class="myContract"><b></b><a th:href="@{/myorder}">我的预约</a></li>
+        </ul>
+    </div><!--/l_aside-->
+
+    <div class="t_spacemainboxright" style="width: 1055px;">
+        <div class="ziroom_box_right">
+            <div class="ziroom_box_right_h  lh30">
+                <h3>收藏管理</h3>
+            </div><!--ziroom_box_right_h -->
+            <div class="ziroom_box_right_c">
+
+                <table cellspacing="0" cellpadding="0" width="100%" class="collect_sheet yuekan">
+                    <tbody id="tbodytwo">
+                    <tr class="ttl_cs">
+                        <td width="50"><input type="checkbox" class="all-yk-checkbox2" id="checkall">&nbsp;全选</td>
+                        <td width="50">序号</td>
+                        <td class="td_firsr" width="100">房源信息</td>
+                        <td class="td_second" width="130">价格</td>
+                        <td class="td_second" width="130">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类型</td>
+                        <td class="td_second" width="180">状态</td>
+                        <td class="td_second" width="250">收藏人气</td>
+                        <td class="td_second" width="110">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作</td>
+                    </tr>
+                    <tr th:each="collection,status:${collections}" th:value="${collection.cid}" th:name="cc">
+                        <td><input type="checkbox" th:name="check" class="all-yk-checkbox2"
+                                   th:onclick="check(${collection.cid})"></td>
+                        <td th:text="${status.count}"></td>
+                        <td th:text="${collection.bedNumber.houses.location}"></td>
+                        <td th:text="${collection.bedNumber.price}"></td>
+                        <td th:text="${collection.bedNumber.houses.livetype}==1?'合租-'+${collection.bedNumber.houses.roomtype}:'整租-'+${collection.bedNumber.houses.roomtype}"></td>
+                        <td th:text="${collection.bedNumber.state}==0?'未预约':(${collection.bedNumber.state}==2?'已预约':'已完成')"></td>
+                        <td th:text="${collection.bedNumber.star}"></td>
+                        <td>
+                            <a th:href="@{/getdetails&bid=}+${collection.bedNumber.bid}"><span
+                                    style="color: red">查看详情</span></a>&nbsp;&nbsp;
+                            <a href="#" th:name="dele"
+                               th:attr="dele_location=${collection.bedNumber.houses.location}"><span style="color: red">删除</span></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:if="${collections}eq null">
+                    <br/><br/><br/><br/>
+                    <p style="text-align: center;color: red;font-size: xx-large">收藏为空</p>
+                </div>
+                <br>
+                <div class="yk-btn">
+                    <input type="button" value="删除选中项" id="deleselect" style="color: red" onclick="deleselect()">
+                </div>
+                <!-- E 约看管理 -->
+            </div><!--ziroom_box_right_c -->
+
+
+        </div>
+    </div>
+
+</div><!--t_spacemainbox -->
+</body>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery-1.11.0.js}"></script>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery.min.js}"></script>
+<script src="assets/js/bootstrap.min.js" th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script>
+    $(function () {
+        $("#checkall").click(function () {
+            $("input[type='checkbox']").prop("checked", this.checked);
+        });
+
+
+        $("[name='dele']").click(function () {
+            if (confirm("是否确定删除" + $(this).attr("dele_location") + "的房间?")) {
+                var row = $(this).parent("td").parent("tr");
+                var cid = row.attr("value");
+                $.ajax({
+                    url: "/House/deleusercollect",
+                    data: {"cid": cid},
+                    type: "post",
+                    success: function (data) {
+                        alert("删除成功!");
+                        window.location.reload();
+                    }
+                })
+            }
+        })
+
+        $("#deleselect").click(function () {
+            var len = $("input[name='check']:checked").length;
+            if (len == 0) {
+                alert("请选择至少一条记录!");
+            } else {
+                if (confirm("是否确定删除选中项?")) {
+                    var check_val = [];
+                    var check = $("input[name='check']:checked");
+                    check.each(function () {
+                        var row = $(this).parent("td").parent("tr");
+                        var cid = row.attr("value");
+                        // var cid=row.find("[name='cc']").value;
+                        check_val.push({cid: cid});
+                    })
+                    $.ajax({
+                        url: "/House/deleselect",
+                        data: {"data": JSON.stringify(check_val)},
+                        type: "post",
+                        success: function (data) {
+                            alert("删除成功!");
+                            window.location.reload();
+                        }
+                    })
+                }
+            }
+        })
+    })
+</script>
+</html>

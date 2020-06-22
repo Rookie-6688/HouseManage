@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<link href="assets/css/bootstrap.css" th:href="@{/assets/css/bootstrap.css}" rel="stylesheet">
+<link href="assets/css/theme.css" th:href="@{/assets/css/theme.css}" rel="stylesheet">
+<body>
+
+
+<body background="assets/images/bground.jpg" th:background="@{/assets/images/bground.jpg}">
+<br><br><br><br><br><br>
+<div id="login">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-title">
+                <h1 class="text-center">登录</h1>
+            </div>
+            <div class="modal-body">
+                <form class="form-group" th:action="@{/user/login}" onsubmit="return sub()" method="post">
+                    <div class="form-group">
+                        <p style="color: red" th:text="${message}" th:if="${not #strings.isEmpty(message)}"></p>
+                        <label for="">用户名</label>
+                        <span id="name_message" style="color:red"></span>
+                        <input class="form-control" id="username" name="username" type="text"
+                               th:value="${user}ne null?${user.username}:${session.name}" placeholder="">
+                    </div>
+                    <div class="form-group">
+                        <label for="">密码</label>
+                        <span id="pwd_message" style="color:red"></span>
+                        <input class="form-control" id="password1"
+                                type="password" placeholder=""><!--th:value="${user}ne null?${user.password}:${session.pwd}"-->
+                    </div>
+                    <input type="hidden" name="password"  id="md5Password">
+                    <br/>
+                    <div class="form-group">
+									<span class="text-right">
+										<span id="yanzheng_message" style="color:red"></span>
+										<input type="text" id="yanzheng" name="yanzheng" Onkeyup="checkyanzheng()"
+                                               placeholder="   请输入验证码" required="">
+										 <img th:src="@{/getKaptchaImage}" style="margin-left: 150px"
+                                              class="reloadImage text-right" id="reloadImage"
+                                              width="121" height="40"/>
+										  <a href="javaScript:;" class="l-color9 reloadImage">看不清楚，换一张</a>
+									</span>
+                    </div>
+                    <div class="text-left">
+                        <P><input type="checkbox" name="rememberMe"  id="rememberMe" />记住我</P> &nbsp;&nbsp;&nbsp;
+                    </div>
+                    <div class="text-right">
+                        <button class="btn btn-primary" id="loginBut" type="submit">登陆</button>
+                        <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                    </div>
+                    <a th:href="@{register}">还没有账号？点我注册</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery-1.11.0.js}"></script>
+<script src="assets/js/bootstrap.min.js" th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/js/jquery.md5.js}"></script>
+<script>
+    $(".reloadImage").click(function () {
+        //获取当前的时间作为参数，无具体意义
+        var timenow = new Date().getTime();
+        $('#reloadImage').attr("src", "http://localhost:8080/House/getKaptchaImage?date=" + timenow);
+    });
+</script>
+<script>
+    function sub() {
+        var name = document.getElementById("username").value.length;
+        var pwd = document.getElementById("password1").value;
+        if (name < 6 || name > 15) {
+            document.getElementById("name_message").innerHTML = "<br/>用户名格式不正确";
+            return false;
+        }
+        var pattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{5,13}$/;
+        if (!pattern.test(pwd)) {
+            document.getElementById("pwd_message").innerHTML = "<br/>密码格式不正确";
+            return false;
+        }
+        return true;
+    }
+</script>
+<script>
+    $(function () {
+        $("#loginBut").bind("click",function () {
+            if(sub()){
+                var v_md5password=$.md5($("#password1").val());
+                $("#md5Password").val(v_md5password)
+            }
+        })
+    })
+</script>
+</html>

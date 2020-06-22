@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="house.demo.Mapper.AdminUserManageMapper">
+
+    <select id="partfind" parameterType="QueryVo" resultType="User">
+        select * from user
+        <where>
+            <if test="uid!=null and uid!=''">
+                and uid=#{uid}
+            </if>
+            <if test="name!=null and name!=''">
+                and username like '%${name}%'
+            </if>
+            <if test="sex!=null and sex!=''">
+                and sex =#{sex}
+            </if>
+            <if test="job!=null and job!=''">
+                and job=#{job}
+            </if>
+        </where>
+        limit #{StartIndex},#{Pagesize}
+    </select>
+
+    <select id="partfindcount" parameterType="QueryVo" resultType="Integer">
+        select count(*) from user
+        <where>
+            <if test="name!=null and name!=''">
+                and name like concat("%",#{name},"%")
+            </if>
+            <if test="sex!=null and sex!=''">
+                and sex =#{sex}
+            </if>
+            <if test="job!=null and job!=''">
+                and job=#{job}
+            </if>
+        </where>
+    </select>
+</mapper>

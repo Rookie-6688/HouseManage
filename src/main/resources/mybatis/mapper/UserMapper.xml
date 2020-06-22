@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="house.demo.Mapper.UserMapper">
+
+    <update id="changeuser" parameterType="User">
+        update user set
+        <if test="password !=null and password!=''">
+            password=#{password},
+        </if>
+        <if test="sex!=null and sex!=''">
+            sex=#{sex},
+        </if>
+        <if test="name!=null and name!=''">
+            name=#{name},
+        </if>
+        <if test="star!=null and star!=''">
+            star=#{star},
+        </if>
+        <if test="job!=null and job!=''">
+            job=#{job},
+        </if>
+        <if test="type!=null and type!=''">
+            type=#{type},
+        </if>
+        email=#{email}
+        where uid=#{uid}
+    </update>
+
+    <select id="getorder" parameterType="String" resultMap="myBed">
+        select * from bednumber where uid=#{uid} and state=2
+    </select>
+
+    <select id="getpay" parameterType="String" resultMap="myBed">
+        select * from bednumber where uid=#{uid} and state=1
+    </select>
+    <resultMap id="myBed" type="BedNumber">
+        <id column="bid" property="bid"/>
+        <result column="number" property="number"/>
+        <result column="state" property="state"/>
+        <result column="price" property="price"/>
+        <result column="area" property="area"/>
+        <result column="sun" property="sun"/>
+        <result column="star" property="star"/>
+        <result column="latedate" property="latedate"/>
+        <association property="houses" javaType="houses">
+            <id column="hid" property="hid"/>
+        </association>
+        <association property="user" javaType="user">
+            <id column="uid" property="uid"/>
+        </association>
+    </resultMap>
+
+</mapper>

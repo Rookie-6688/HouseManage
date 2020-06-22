@@ -1,0 +1,144 @@
+<HTML xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <meta http-equiv="Content-Language" content="zh-cn">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <LINK th:href="@{assets/css/Style1.css}" type="text/css" rel="stylesheet">
+</HEAD>
+
+<body>
+<!--  -->
+<form id="userAction_save_do" name="Form1" th:action="@{/adminOrderUpdate}" method="post" onsubmit="return sub()">
+    <input type="hidden" name="bid" th:value="${bednumber.bid}">
+    <input type="hidden" name="page" th:value="${page}">
+    <input type="hidden" name="prestate" th:value="${bednumber.state}">
+    &nbsp;
+    <table cellSpacing="1" cellPadding="5" width="100%" align="center" bgColor="#eeeeee"
+           style="border: 1px solid #8ba7e3" border="0">
+        <div style="color:#f00" align="center">[[${message}]]</div>
+        <tr>
+            <td class="ta_01" align="center" bgColor="#afd1f3" colSpan="4"
+                height="26">
+                <strong><STRONG>编辑出租信息</STRONG>
+                </strong>
+            </td>
+        </tr>
+
+        <tr>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                房屋位置：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <p th:text="${bednumber.houses.location}" class="bg"></p>
+            </td>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                房间号：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <p th:text="${bednumber.number}" class="bg"></p>
+            </td>
+        </tr>
+        <tr>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                房屋状态：
+            </td>
+            <td class="ta_01" id="stateee" bgColor="#ffffff">
+                <input type="radio" name="state" id="state0" value=0 th:checked="${bednumber.state==0}">待出租
+                <input type="radio" name="state" id="state2" value=2 th:checked="${bednumber.state==2}">已预定
+                <input type="radio" name="state" id="state1" value=1 th:checked="${bednumber.state==1}">已租出
+            </td>
+            <td width="18%" align="center" id="userid" bgColor="#f5fafe" class="ta_01">
+                户主id：
+            </td>
+            <td class="ta_01" id="uuid" bgColor="#ffffff">
+                <input type="text" style="height:auto" name="uid"
+                       th:value="${bednumber.user}ne null?${bednumber.user.uid}:''" id="uid" class="bg"/>
+                <span id="user_message" style="color:red;"></span>
+            </td>
+        </tr>
+        <tr id="overdate">
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                过期时间：
+            </td>
+            <td class="ta_01" id="latedate" bgColor="#ffffff">
+                <input type="date" th:value="${#dates.format(bednumber.latedate,'yyyy-MM-dd')}" name="latedate">
+            </td>
+            <td class="ta_01" bgColor="#ffffff"></td>
+            <td class="ta_01" bgColor="#ffffff"></td>
+        </tr>
+        <tr>
+            <td class="ta_01" style="WIDTH: 100%" align="center"
+                bgColor="#f5fafe" colSpan="4">
+                <button type="submit" id="userAction_save_do_submit" value="确定" class="button_ok">
+                    &#30830;&#23450;
+                </button>
+
+                <FONT face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT>
+                <button type="reset" value="重置" class="button_cancel">&#37325;&#32622;</button>
+
+                <FONT face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT>
+                <INPUT class="button_ok" type="button" onclick="history.go(-1)" value="返回"/>
+                <span id="Label1"></span>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery-1.11.0.js}"></script>
+<script src="assets/js/bootstrap.min.js" th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script>
+    $("#state0").click(function () {
+        $("#stateee").attr('colSpan', 3);
+        $("#userid").hide();
+        $("#uuid").hide();
+        $("#overdate").hide();
+    })
+    $("#state1").click(function () {
+        $("#stateee").attr('colSpan', 0);
+        $("#userid").show();
+        $("#uuid").show();
+        $("#overdate").show();
+    })
+    $("#state2").click(function () {
+        $("#stateee").attr('colSpan', 0);
+        $("#userid").show();
+        $("#uuid").show();
+        $("#overdate").show();
+    })
+    $(function () {
+        if ($("[name='state']:checked").val() == 0) {
+            $("#stateee").attr('colSpan', 3);
+            $("#userid").hide();
+            $("#uuid").hide();
+            $("#overdate").hide();
+        }
+    })
+
+    function sub() {
+        var val = $("[name='state']:checked").val();
+        if (val != 0) {
+            if ($("#uid").val().length == 0) {
+                document.getElementById("user_message").innerHTML = "<br/>请输入用户id";
+                return false;
+            }
+        } else {
+            return true;
+        }
+    }
+
+    $("#uid").keyup(function () {
+        var uid = $("#uid").val();
+        $.ajax({
+            url: "/House/adminsearchuser",
+            data: {"uid": uid},
+            type: "post",
+            success: function (data) {
+                if (data == "") {
+                    document.getElementById("user_message").innerText = "姓名：无匹配结果";
+                } else {
+                    document.getElementById("user_message").innerText = "姓名：" + data;
+                }
+            }
+        })
+    })
+</script>
+</HTML>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="house.demo.Mapper.AdminOrderManageMapper">
+    <update id="clearOver">
+        update bednumber set state=0,uid=null,latedate=null where state=#{state} and (latedate &lt; now() or latedate is null)
+    </update>
+
+    <!--<select id="getorder" resultMap="myBed" parameterType="QueryVo">-->
+    <!--select * from bednumber where state=#{state} limit #{StartIndex},#{Pagesize}-->
+    <!--</select>-->
+
+    <select id="searchbedlist" parameterType="QueryVo" resultMap="myBed">
+        select * from bednumber b inner join houses h on h.hid=b.hid
+        <if test="much2!=-1 and much2!=null">
+            and b.price &gt;= #{much2}
+        </if>
+        <if test="much!=-1 and much!=null">
+            and b.price &lt;= #{much}
+        </if>
+        <if test="bid!=null and bid!=''">
+            and b.bid = #{bid}
+        </if>
+        <if test="location !=null and location!=''">
+            and h.location like concat("%",#{location},"%")
+        </if>
+        <if test="livetype!=null and livetype!=-1">
+            and h.livetype=#{livetype}
+        </if>
+        and b.state=#{state}
+        limit #{StartIndex},#{Pagesize}
+    </select>
+
+    <select id="searchbedcount" parameterType="QueryVo" resultType="Integer">
+        select count(*) from bednumber b inner join houses h on h.hid=b.hid
+        <if test="much2!=-1 and much2!=null">
+            and b.price &gt;= #{much2}
+        </if>
+        <if test="much!=-1 and much!=null">
+            and b.price &lt;= #{much}
+        </if>
+        <if test="bid!=null and bid!=''">
+            and b.bid = #{bid}
+        </if>
+        <if test="location !=null and location!=''">
+            and h.location like concat("%",#{location},"%")
+        </if>
+        <if test="livetype!=null and livetype!=-1">
+            and h.livetype=#{livetype}
+        </if>
+        and b.state=#{state}
+    </select>
+    <select id="searchbedOvertime" resultType="java.lang.Integer">
+        select count(*) from bednumber b where state=#{state}
+            and (latedate &lt; now() or latedate is null)
+    </select>
+    <select id="searchbedOvertimeList" resultMap="myBed">
+        select * from bednumber b where state=#{state}
+            and (latedate &lt; now() or latedate is null)
+        limit #{StartIndex},#{Pagesize}
+    </select>
+
+    <resultMap id="myBed" type="BedNumber">
+        <id column="bid" property="bid"/>
+        <result column="number" property="number"/>
+        <result column="state" property="state"/>
+        <result column="price" property="price"/>
+        <result column="area" property="area"/>
+        <result column="sun" property="sun"/>
+        <result column="star" property="star"/>
+        <result column="latedate" property="latedate"/>
+        <association property="houses" javaType="houses">
+            <id column="hid" property="hid"/>
+        </association>
+        <association property="user" javaType="user">
+            <id column="uid" property="uid"/>
+        </association>
+    </resultMap>
+</mapper>

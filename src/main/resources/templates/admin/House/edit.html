@@ -1,0 +1,200 @@
+<HTML xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <meta http-equiv="Content-Language" content="zh-cn">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <LINK th:href="@{assets/css/Style1.css}" type="text/css" rel="stylesheet">
+</HEAD>
+
+<body>
+<!--  -->
+<form id="userAction_save_do" name="Form1" th:action="@{/adminHouse_update}" method="post" onsubmit="return sub()">
+    <input type="hidden" name="hid" th:value="${bednumber}ne null?${bednumber.houses.hid}:''">
+    <input type="hidden" name="bid" th:value="${bednumber}ne null?${bednumber.bid}:''">
+    &nbsp;
+    <table cellSpacing="1" cellPadding="5" width="100%" align="center" bgColor="#eeeeee"
+           style="border: 1px solid #8ba7e3" border="0">
+        <div style="color:#f00" align="center">[[${message}]]</div>
+        <tr>
+            <td class="ta_01" align="center" bgColor="#afd1f3" colSpan="4"
+                height="26">
+                <strong><STRONG>编辑房屋信息</STRONG>
+                </strong>
+            </td>
+        </tr>
+
+        <tr>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                房屋位置：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <input type="text" name="location" th:value="${bednumber.houses.location}" id="location" class="bg"/>
+                <span id="location_message" style="color:red;"></span>
+            </td>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                房屋类型：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+
+                <select name="roomtype">
+                    <option value="一室一厅" th:selected="${bednumber.houses.roomtype}=='一室一厅'">一室一厅</option>
+                    <option value="两室一厅" th:selected="${bednumber.houses.roomtype}=='两室一厅'">两室一厅</option>
+                    <option value="三室一厅" th:selected="${bednumber.houses.roomtype}=='三室一厅'">三室一厅</option>
+                    <option value="四室一厅" th:selected="${bednumber.houses.roomtype}=='四室一厅'">四室一厅</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                价格：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <input type="number" name="price" th:value="${bednumber.price}" id="price" class="bg"/>
+                <span id="price_message" style="color:red;"></span>
+            </td>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                大小：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <input type="number" name="area" th:value="${bednumber.area}" id="area" class="bg"/>
+                <span id="area_message" style="color:red;"></span>
+            </td>
+        </tr>
+        <tr>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                图片地址：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <input type="text" name="images" th:value="${bednumber.houses.images}" id="images"/>
+                <span id="images_message" style="color:red;"></span>
+            </td>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                楼层：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <input type="number" name="high" th:value="${bednumber.houses.high}" id="high"/>
+                <span id="high_message" style="color:red;"></span>
+            </td>
+        </tr>
+        <tr>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                是否有阳台：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                有<input name="sun" type="radio" value="1" th:checked="${bednumber.sun}==1"/>
+                无<input name="sun" type="radio" value="0" th:checked="${bednumber.sun}==0"/>
+            </td>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                房间号：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <input type="number" name="number" th:value="${bednumber.number}" id="bedlocation"/>
+                <span id="bedlocation_message" style="color:red;"></span>
+            </td>
+        </tr>
+        <tr>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                居住类型：
+            </td>
+            <td class="ta_01" bgColor="#ffffff" colspan="3">
+                <select name="livetype">
+                    <option th:selected="${bednumber.houses.livetype}==0" value="0">整租</option>
+                    <option th:selected="${bednumber.houses.livetype}==1" value="1">合租</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="ta_01" style="WIDTH: 100%" align="center"
+                bgColor="#f5fafe" colSpan="4">
+                <button type="submit" id="userAction_save_do_submit" value="确定" class="button_ok">
+                    &#30830;&#23450;
+                </button>
+
+                <FONT face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT>
+                <button type="reset" value="重置" class="button_cancel">&#37325;&#32622;</button>
+
+                <FONT face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT>
+                <INPUT class="button_ok" type="button" onclick="history.go(-1)" value="返回"/>
+                <span id="Label1"></span>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery-1.11.0.js}"></script>
+<script src="assets/js/bootstrap.min.js" th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script>
+    function checkbedlocation() {
+        var bedlocation = document.getElementById("bedlocation").value;
+        if (bedlocation.length == 0) {
+            document.getElementById("bedlocation_message").innerHTML = "<br/>房间号不能为空";
+            return false;
+        } else {
+            document.getElementById("bedlocation_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function checklocation() {
+        var location = document.getElementById("location").value;
+        if (location.length == 0) {
+            document.getElementById("location_message").innerHTML = "<br/>请输入房屋地址";
+            return false;
+        } else {
+            document.getElementById("location_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function checkbedhigh() {
+        var high = document.getElementById("high").value;
+        if (high.length == 0) {
+            document.getElementById("high_message").innerHTML = "<br/>请输入楼层";
+            return false;
+        } else {
+            document.getElementById("high_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function checkbedimages() {
+        var images = document.getElementById("images").value;
+        if (images.length == 0) {
+            document.getElementById("images_message").innerHTML = "<br/>请输入图片相对路径";
+            return false;
+        } else {
+            document.getElementById("images_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function checkbedarea() {
+        var area = document.getElementById("area").value;
+        if (area.length == 0) {
+            document.getElementById("area_message").innerHTML = "<br/>请输入面积";
+            return false;
+        } else {
+            document.getElementById("area_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function checkbedprice() {
+        var price = document.getElementById("price").value;
+        if (price.length == 0) {
+            document.getElementById("price_message").innerHTML = "<br/>请输入价格";
+            return false;
+        } else {
+            document.getElementById("price_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function sub() {
+        if (checkbedarea() && checkbedhigh() && checkbedimages() && checkbedlocation() && checkbedprice() && checklocation()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+</HTML>

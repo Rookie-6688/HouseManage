@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<!-- Bootstrap -->
+<link th:href="@{assets/css/bootstrap.css}" rel="stylesheet">
+<link th:href="@{assets/css/theme.css}" rel="stylesheet">
+<link th:href="@{assets/css/common.css}" rel="stylesheet">
+<link th:href="@{assets/css/my_zone.css}" rel="stylesheet">
+
+<body>
+<header id="site-header">
+    <div id="site-header-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="clearfix">
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="clearfix">
+                        <a class="btn btn-warning btn-lg header-btn hidden-sm" href="/login"
+                           th:if="${session.user}eq null" th:href="@{/login}">登陆</a>
+                        <a class="btn btn-warning btn-lg header-btn hidden-sm" href="/register"
+                           th:if="${session.user}eq null" th:href="@{/register}">注册</a>
+                        <div class="currency-in-header">
+                            <i class="fa fa-flag"></i>
+                            <label th:if="${session.user}eq null"> 当前状态：未登录 </label>
+                            <span th:if="${session.user}ne null" style="color: red;size: 5px">[[${session.user.name}]], 您好</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a th:href="@{/loginout}" th:if="${session.user} ne null"
+                               style="color: blue;size:5px">切换用户</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <figure id="site-logo">
+                    <a href="index.html"><img th:src="@{/assets/images/logo3.jpg}" alt="Logo"></a>
+                </figure>
+            </div>
+            <div class="col-md-6 col-sm-8">
+                <nav id="site-nav" class="nav navbar-default">
+                    <ul class="nav navbar-nav">
+                        <li><a href="" th:href="@{/}"><font size="5">首页</font></a></li>
+                        <li><a href="search" th:href="@{/findhouse&roomtype=&high=-1&much=-1&livetype=-1&order=&num=1}"><font
+                                size="5">查找</font></a></li>
+                        <li><a href="MyMessage" th:href="@{/MyMessage}"><font size="5">个人信息</font></a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-3 col-sm-4">
+                <div class="contact-in-header clearfix">
+                    <i class="fa fa-mobile"></i>
+                    <span>
+		                        	联系我们
+		                        <br>
+		                    <strong>187 9204 1765</strong>
+		                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="area zone_cont clearfix" style="position: relative; z-index: 1;">
+    <!--公告-->
+    <div class="slideLeft">
+        <ul>
+            <li class="myStore"><b></b><a th:href="@{/MyMessage}">个人资料</a></li>
+            <li class="myLook"><b></b><a th:href="@{/MyCollections}">我的收藏</a></li>
+            <li class="myContract"><b></b><a th:href="@{/myorder}" th:class="active">我的预约</a></li>
+        </ul>
+    </div><!--/l_aside-->
+
+    <div class="t_spacemainboxright" style="width: 1055px;">
+        <div class="ziroom_box_right">
+            <div class="ziroom_box_right_h  lh30">
+                <h3>已预约</h3>
+            </div><!--ziroom_box_right_h -->
+            <div class="ziroom_box_right_c">
+
+                <table cellspacing="0" cellpadding="0" width="100%" class="collect_sheet yuekan">
+                    <tbody id="tbodytwo">
+                    <tr class="ttl_cs">
+                        <td width="50">序号</td>
+                        <td class="td_firsr" width="100">房源信息</td>
+                        <td class="td_second" width="130">价格</td>
+                        <td class="td_second" width="130">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类型</td>
+                        <td class="td_second" width="180" style="padding-left: 20px">最迟查看时间</td>
+                        <td class="td_second" width="250">收藏人气</td>
+                        <td class="td_second" width="190">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;操作</td>
+                    </tr>
+                    <tr th:each="order,status:${orderlist}" th:value="${order.bid}" th:if="${orderlist ne null}">
+                        <td th:text="${status.count}"></td>
+                        <td th:text="${order.houses.location}"></td>
+                        <td th:text="${order.price}"></td>
+                        <td th:text="${order.houses.livetype}==1?'合租-'+${order.houses.roomtype}:'整租-'+${order.houses.roomtype}"></td>
+                        <td th:text="${#dates.format(order.latedate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${order.star}"></td>
+                        <td>
+                            <a th:href="@{/getdetails&bid=}+${order.bid}"><span style="color: red">查看详情</span></a>&nbsp;&nbsp;
+                            <a th:href="'/House/pay/'+${order.bid}" name="order" target="_blank"><span style="color: red">立刻订购</span></a>&nbsp;&nbsp;
+                            <a href="#" name="concel"><span style="color: red">取消预约</span></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:if="${orderlist}eq null">
+                    <br/><br/><br/><br/>
+                    <p style="text-align: center;color: red;font-size: xx-large">没有已预定的房间</p>
+                </div>
+                <br>
+            </div>
+            <div class="ziroom_box_right_h  lh30">
+                <h3>已完成</h3>
+            </div><!--ziroom_box_right_h -->
+            <div class="ziroom_box_right_c">
+
+                <table cellspacing="0" cellpadding="0" width="100%" class="collect_sheet yuekan">
+                    <tbody id="tbodytwo">
+                    <tr class="ttl_cs">
+                        <td width="50">序号</td>
+                        <td class="td_firsr" width="100">房源信息</td>
+                        <td class="td_second" width="130">价格</td>
+                        <td class="td_second" width="130">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;类型</td>
+                        <td class="td_second" width="180" style="padding-left: 20px">房屋到期时间</td>
+                        <td class="td_second" width="250">收藏人气</td>
+                        <td class="td_second" width="140">&nbsp;&nbsp;&nbsp;&nbsp;操作</td>
+                    </tr>
+                    <tr th:if="${paylist}ne null" th:each="pay,status:${paylist}">
+                        <td th:text="${status.count}"></td>
+                        <td th:text="${pay.houses.location}"></td>
+                        <td th:text="${pay.price}"></td>
+                        <td th:text="${pay.houses.livetype}==1?'合租-'+${pay.houses.roomtype}:'整租-'+${pay.houses.roomtype}"></td>
+                        <td th:text="${#dates.format(pay.latedate,'yyyy-MM-dd HH:mm:ss')}"></td>
+                        <td th:text="${pay.star}"></td>
+                        <td th:name="${pay.bid}">
+                            <a th:href="@{/getdetails&bid=}+${pay.bid}"><span style="color: red">查看详情</span></a>&nbsp;&nbsp;
+                            <a href="#" name="remove"><span style="color: red">退房</span></a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div th:if="${paylist}eq null">
+                    <br/><br/><br/><br/>
+                    <p style="text-align: center;color: red;font-size: xx-large">没有已订购的房间</p>
+                </div>
+                <br>
+            </div>
+
+
+        </div>
+    </div>
+
+</div><!--t_spacemainbox -->
+</body>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery-1.11.0.js}"></script>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery.min.js}"></script>
+<script src="assets/js/bootstrap.min.js" th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script>
+    $(function () {
+        $("[name='concel']").click(function () {
+            var bid = $(this).parent("td").parent("tr").attr("value");
+            if (confirm("是否确认取消预约？")) {
+                $.ajax({
+                    url: "/House/concel",
+                    method: "post",
+                    data: {"bid": bid},
+                    success: function (data) {
+                        alert("取消成功！");
+                        window.location.reload();
+                    }
+                })
+            }
+        })
+        $("[name='remove']").click(function () {
+            var bid = $(this).parent("td").attr("name");
+            if (confirm("是否确认退房？")) {
+                $.ajax({
+                    url: "/House/removeroom",
+                    method: "post",
+                    data: {"bid": bid},
+                    success: function (data) {
+                        alert("退房成功！");
+                        window.location.reload();
+                    }
+                })
+            }
+        })
+    })
+</script>
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<link th:href="@{assets/css/bootstrap.css}" rel="stylesheet">
+<link th:href="@{assets/css/theme.css}" rel="stylesheet">
+<link th:href="@{assets/css/common.css}" rel="stylesheet">
+<link th:href="@{assets/css/my_zone.css}" rel="stylesheet">
+<body>
+<header id="site-header">
+    <div id="site-header-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="clearfix">
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="clearfix">
+                        <a class="btn btn-warning btn-lg header-btn hidden-sm" href="/login"
+                           th:if="${session.user}eq null" th:href="@{/login}">登陆</a>
+                        <a class="btn btn-warning btn-lg header-btn hidden-sm" href="/register"
+                           th:if="${session.user}eq null" th:href="@{/register}">注册</a>
+                        <div class="currency-in-header">
+                            <i class="fa fa-flag"></i>
+                            <label th:if="${session.user}eq null"> 当前状态：未登录 </label>
+                            <span th:if="${session.user}ne null" style="color: red;size: 5px">[[${session.user.name}]], 您好</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a th:href="@{/loginout}" th:if="${session.user} ne null"
+                               style="color: blue;size:5px">切换用户</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <figure id="site-logo">
+                    <a href="index.html"><img th:src="@{/assets/images/logo3.jpg}" alt="Logo"></a>
+                </figure>
+            </div>
+            <div class="col-md-6 col-sm-8">
+                <nav id="site-nav" class="nav navbar-default">
+                    <ul class="nav navbar-nav">
+                        <li><a href="" th:href="@{/}"><font size="5">首页</font></a></li>
+                        <li><a href="search" th:href="@{/findhouse&roomtype=&high=-1&much=-1&livetype=-1&order=&num=1}"><font
+                                size="5">查找</font></a></li>
+                        <li><a href="MyMessage" th:href="@{/MyMessage}"><font size="5">个人信息</font></a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-3 col-sm-4">
+                <div class="contact-in-header clearfix">
+                    <i class="fa fa-mobile"></i>
+                    <span>
+										联系我们
+									<br>
+								<strong>187 9204 1765</strong>
+								</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="area zone_cont clearfix" style="position: relative; z-index: 1;">
+    <!--公告-->
+    <div class="slideLeft">
+        <ul>
+            <li class="myStore"><b></b><a th:href="@{/MyMessage}" th:class="active">个人资料</a></li>
+            <li class="myLook"><b></b><a th:href="@{/MyCollections}">我的收藏</a></li>
+            <li class="myContract"><b></b><a th:href="@{/myorder}">我的预约</a></li>
+        </ul>
+    </div><!--/l_aside-->
+
+    <div class="t_spacemainboxright" style="width: 1055px;">
+        <div class="ziroom_box_right">
+            <div class="ziroom_box_right_h  lh30">
+                <h3>个人信息</h3>
+            </div><!--ziroom_box_right_h -->
+            <p style="color: red;font-size: 15px" th:text="${message}" th:if="${not #strings.isEmpty(message)}"></p>
+            <div class="ziroom_box_right_c">
+                <h2><a class="btn btn-sm btn-success" href="emp" th:href="@{/changeMyMessage}">修改信息</a></h2>
+                <table width="100%" th:height="250px" class="collect_sheet yuekan" border="1px solid">
+                    <tbody id="tbodytwo" style="text-align: center">
+                    <tr class="ttl_cs">
+                        <td class="td_firsr" width="100"><span style="font-size: 20px;color: red;">种类</span></td>
+                        <td class="td_second" width="130" style="font-size: 20px;color: red">内容</td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px">用户名</td>
+                        <td style="font-size: 15px" th:text="${session.user.username}"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px">昵称</td>
+                        <td style="font-size: 15px" th:text="${session.user.name}"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px">手机号</td>
+                        <td style="font-size: 15px" th:text="${session.user.phone}"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px">性别</td>
+                        <td style="font-size: 15px" th:text="${session.user.sex}==null?'保密':${session.user.sex}"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px">星座</td>
+                        <td style="font-size: 15px" th:text="${session.user.star}==null?'保密':${session.user.star}"></td>
+                    </tr>
+                    <tr>
+                        <td style="font-size: 15px">职业</td>
+                        <td style="font-size: 15px" th:text="${session.user.job}==null?'保密':${session.user.job}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <br>
+                <!-- E 约看管理 -->
+            </div><!--ziroom_box_right_c -->
+
+
+        </div>
+    </div>
+
+</div><!--t_spacemainbox -->
+</body>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery-1.11.0.js}"></script>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery.min.js}"></script>
+<script src="assets/js/bootstrap.min.js" th:src="@{/assets/js/bootstrap.min.js}"></script>
+
+</html>

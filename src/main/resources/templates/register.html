@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<link href="assets/css/bootstrap.css" th:href="@{/assets/css/bootstrap.css}" rel="stylesheet">
+<link href="assets/css/theme.css" th:href="@{/assets/css/theme.css}" rel="stylesheet">
+<body>
+
+
+<body background="assets/images/bground.jpg" th:background="@{/assets/images/bground.jpg}">
+<br><br><br><br><br><br>
+<div id="register" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button class="close" data-dismiss="modal">
+                    <span>&times;</span>
+                </button>
+            </div>
+            <div class="modal-title">
+                <h1 class="text-center">注册</h1>
+            </div>
+            <div class="modal-body">
+                <form class="form-group" th:action="@{/validateNum}" onsubmit="return over()" th:method="post">
+                    <span th:text="${msg}" style="color:red ;font-size: 10px"></span>
+                    <div class="form-group">
+                        <p style="color: red" th:text="${message}" th:if="${not #strings.isEmpty(message)}"></p>
+                        <label for="">用户名(不可更改)</label>
+                        <span id="username_message" style="color:red"></span>
+                        <input class="form-control" id="username" name="username" Onkeyup="checkusername()"
+                               th:value="${user}ne null?${user.username}:''" type="text" placeholder="6-15位字母或数字">
+                    </div>
+                    <div class="form-group">
+                        <label for="">昵称</label>
+                        <span id="name_message" style="color:red"></span>
+                        <input class="form-control" id="name" name="name" Onkeyup="checkname()"
+                               th:value="${user}ne null?${user.name}:''" type="text" placeholder="昵称">
+                    </div>
+                    <div class="form-group">
+                        <label for="">密码</label>
+                        <span id="pwd_message" style="color:red"></span>
+                        <input class="form-control"  id="password1" Onkeyup="checkpwd()"
+                                type="password" placeholder="至少5位字母或数字">
+                        <input type="hidden" name="password"  id="md5Password">
+                    </div>
+                    <div class="form-group">
+                        <label for="">再次输入密码</label>
+                        <span id="repwd_message" style="color:red"></span>
+                        <input class="form-control" id="repassword" Onkeyup="checkrepwd()"
+                        type="password" th:value="${user}ne null?${user.password}:''" placeholder="至少5位字母或数字">
+                    </div>
+                    <div class="form-group">
+                        <label for="">手机号</label>
+                        <span id="phone_message" style="color:red"></span>
+                        <input type="tel" class="form-control" name="phone"  id="phone" placeholder="请输入手机号" onkeyup="checkPhone()" maxlength=11>
+                    </div>
+                    <div class="form-group">
+                        <span class="text-right">
+										<span id="yanzheng_message" style="color:red"></span><br/>
+                            <input id="code" name="code" placeholder="请输入验证码" onkeyup="checkyanzheng()">
+
+                            <input type="button" class="text-right" id="verify_refresh" onclick="getMsgNum(this)" value="免费获取验证码">
+									</span>
+                    </div>
+
+                    <div class="text-right">
+                        <button class="btn btn-primary" onclick="validateNum()" id="loginBut" type="submit">提交</button>
+                        <button class="btn btn-danger" data-dismiss="modal">取消</button>
+                    </div>
+                    <a th:href="@{/login}">已有账号？点我登录</a>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery-1.11.0.js}"></script>
+<script src="assets/js/bootstrap.min.js" th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script th:src="@{/assets/js/jquery.md5.js}"></script>
+<script type="text/javascript">
+    function checkusername() {
+        var name = document.getElementById("username").value;
+        if (name.length < 6 || name.length > 15) {
+            document.getElementById("username_message").innerHTML = "<br/>用户名长度必须在6到15位";
+            return false;
+        } else {
+            document.getElementById("username_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function checkname() {
+        var name = document.getElementById("name").value;
+        if (name.length == 0 || name.length > 8) {
+            document.getElementById("name_message").innerHTML = "<br/>昵称不能为空且不能超过8位";
+            return false;
+        } else {
+            document.getElementById("name_message").innerHTML = "";
+            return true;
+        }
+    }
+    function checkyanzheng() {
+        var name = document.getElementById("code").value;
+        if (name.length == 0 ) {
+            document.getElementById("yanzheng_message").innerHTML = "<br/>请输入验证码";
+            return false;
+        } else {
+            document.getElementById("yanzheng_message").innerHTML = "";
+            return true;
+        }
+    }
+    function checkPhone() {
+        var phone = document.getElementById("phone").value;
+        if (!(/^1[3456789]\d{9}$/.test(phone))) {
+            document.getElementById("phone_message").innerHTML = "<br/>请输入正确的手机号";
+            return false;
+        } else {
+            document.getElementById("phone_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function checkpwd() {
+        var pattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{5,13}$/;
+        var pwd = document.getElementById("password1").value;
+        if (!pattern.test(pwd)) {
+            document.getElementById("pwd_message").innerHTML = "<br/>密码长度必须在5到13位且必须为数字字母组合";
+            return false;
+        } else {
+            document.getElementById("pwd_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function checkrepwd() {
+        var pwd = document.getElementById("password1").value;
+        var repwd = document.getElementById("repassword").value;
+        if (pwd == repwd) {
+            document.getElementById("repwd_message").innerHTML = "";
+            return true;
+        } else {
+            document.getElementById("repwd_message").innerHTML = "<br/>确认密码必须与密码一致";
+            return false;
+        }
+    }
+
+    var messageData;
+    var wait = 120; // 短信验证码120秒后才可获取下一个
+
+    /**
+     * 获取验证码
+     * @param that
+     */
+    function getMsgNum(that) {
+        var phoneNumber = $('#phone').val();
+        if(checkPhone()){
+            setButtonStatus(that); // 设置按钮倒计时
+            var obj = {
+                phoneNumber: phoneNumber
+            };
+            $.ajax({
+                url: "/House/sendMsg", // 后台短信发送接口
+                type: 'POST',
+                dataType: 'json',
+                contentType: "application/json",
+                async: false, //false 同步
+                data: JSON.stringify(obj),
+                xhrFields: {
+                    withCredentials: true
+                },
+                success: function (result) {
+                    if(result.code == '200') {
+                        messageData = result.data;
+                    }else {
+                        alert("错误码:" + data.code + "  错误信息:" + data.message);
+                    }
+                },
+                error: function (XMLHttpRequest, textStatus, errorThrown) {
+                    console.log(XMLHttpRequest.status);
+                    console.log(XMLHttpRequest.readyState);
+                    console.log(textStatus);
+                }
+            });
+        }
+    }
+    /**
+     * 设置按钮状态
+     */
+    function setButtonStatus(that) {
+        if (wait == 0) {
+            that.removeAttribute("disabled");
+            that.value="免费获取验证码";
+            wait = 60;
+        } else {
+            that.setAttribute("disabled", true);
+            that.value=wait+"秒后可以重新发送";
+            wait--;
+            setTimeout(function() {
+                setButtonStatus(that)
+            }, 1000)
+        }
+    }
+
+    function over() {
+        if($("#phone").val().length==0){
+            alert("请输入手机号");
+            return false;
+        }else if($("#msg_num").val().length==0){
+            checkPhone();
+            alert($("#password1").val())
+            alert($("#password").val())
+            return true;
+        }else  if (checkname() && checkpwd() && checkyanzheng() && i & checkusername()) {
+            return false;
+        } else {
+            return false;
+        }
+    };
+</script>
+<script>
+    $(function () {
+        $("#loginBut").bind("click",function () {
+            var v_md5password=$.md5($("#password1").val());
+            $("#md5Password").val(v_md5password)
+        })
+    })
+</script>
+</html>

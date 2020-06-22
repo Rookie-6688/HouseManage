@@ -1,0 +1,176 @@
+<HTML xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <meta http-equiv="Content-Language" content="zh-cn">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <LINK th:href="@{assets/css/Style1.css}" type="text/css" rel="stylesheet">
+</HEAD>
+
+<body>
+<form id="userAction_save_do" name="Form1" th:action="@{/useradmin_add}" onsubmit="return sub()" method="post">
+    <input type="hidden" name="uid" th:value="${user}ne null?${user.uid }"/>
+    &nbsp;
+    <table cellSpacing="1" cellPadding="5" width="100%" align="center" bgColor="#eeeeee"
+           style="border: 1px solid #8ba7e3" border="0">
+        <tr>
+            <td class="ta_01" align="center" bgColor="#afd1f3" colSpan="4"
+                height="26">
+                <strong><STRONG>添加用户</STRONG>
+                </strong>
+                <div style="color:#f00" align="center">[[${message}]]</div>
+            </td>
+        </tr>
+
+        <tr>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                用户名称：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <input type="text" name="username" th:value="${user}ne null?${user.username }" id="username"
+                       class="bg"/>
+                <span id="username_message" style="color:red;"></span>
+            </td>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                密码：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <input type="text" name="password" th:value="${user}ne null?${user.password }" id="password"
+                       class="bg"/>
+                <span id="password_message" style="color:red;"></span>
+            </td>
+        </tr>
+        <tr>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                邮箱：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <input type="email" name="email" th:value="${user}ne null?${user.email }" id="email" class="bg"/>
+                <span id="email_message" style="color:red;"></span>
+            </td>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                昵称：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <input type="text" name="name" th:value="${user}ne null?${user.name}" id="name" class="bg"/>
+                <span id="name_message" style="color:red;"></span>
+            </td>
+        </tr>
+        <tr>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                性别：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <input type="radio" name="sex" value="男" th:checked="${user}ne null?${user.sex=='男'}"/>男
+                <input type="radio" name="sex" value="女" th:checked="${user}ne null?${user.sex=='女'}"/>女
+                <input type="radio" name="sex" value="保密" th:checked="${user}ne null?${user.sex=='保密'}:'checked'"/>保密
+            </td>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                星座：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <select name="star" style="border: 1px solid black">
+                    <option value="保密">保密</option>
+                    <option value="白羊座" th:selected="${user}ne null?${user.star=='白羊座'}">白羊座</option>
+                    <option value="金牛座" th:selected="${user}ne null?${user.star=='金牛座'}">金牛座</option>
+                    <option value="双子座" th:selected="${user}ne null?${user.star=='双子座'}">双子座</option>
+                    <option value="巨蟹座" th:selected="${user}ne null?${user.star=='巨蟹座'}">巨蟹座</option>
+                    <option value="狮子座" th:selected="${user}ne null?${user.star=='狮子座'}">狮子座</option>
+                    <option value="处女座" th:selected="${user}ne null?${user.star=='处女座'}">处女座</option>
+                    <option value="天秤座" th:selected="${user}ne null?${user.star=='天秤座'}">天秤座</option>
+                    <option value="天蝎座" th:selected="${user}ne null?${user.star=='天蝎座'}">天蝎座</option>
+                    <option value="射手座" th:selected="${user}ne null?${user.star=='射手座'}">射手座</option>
+                    <option value="摩羯座" th:selected="${user}ne null?${user.star=='摩羯座'}">摩羯座</option>
+                    <option value="水瓶座" th:selected="${user}ne null?${user.star=='水瓶座'}">水瓶座</option>
+                    <option value="双鱼座" th:selected="${user}ne null?${user.star=='双鱼座'}">双鱼座</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                权限：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <input type="radio" name="type" value="0" th:checked="${user}ne null?${user.type==0}:'checked'"/>用户
+                <input type="radio" name="type" value="1" th:checked="${user}ne null?${user.type==1}"/>管理员
+            </td>
+            <td width="18%" align="center" bgColor="#f5fafe" class="ta_01">
+                职业：
+            </td>
+            <td class="ta_01" bgColor="#ffffff">
+                <select name="job" style="border: 1px solid black">
+                    <option value="保密">保密</option>
+                    <option value="软件程序设计" th:selected="${user}ne null?${user.job=='软件程序设计'}">软件程序设计</option>
+                    <option value="会计" th:selected="${user}ne null?${user.job=='会计'}">会计</option>
+                    <option value="销售" th:selected="${user}ne null?${user.job=='销售'}">销售</option>
+                    <option value="广告文案" th:selected="${user}ne null?${user.job=='广告文案'}">广告文案</option>
+                    <option value="其他" th:selected="${user}ne null?${user.job=='其他'}">其他</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="ta_01" style="WIDTH: 100%" align="center"
+                bgColor="#f5fafe" colSpan="4">
+                <button type="submit" id="userAction_save_do_submit" value="确定" class="button_ok">
+                    &#30830;&#23450;
+                </button>
+
+                <FONT face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT>
+                <button type="reset" value="重置" class="button_cancel">&#37325;&#32622;</button>
+
+                <FONT face="宋体">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</FONT>
+                <input class="button_ok" type="button" onclick="history.go(-1)" value="返回"/>
+                <span id="Label1"></span>
+            </td>
+        </tr>
+    </table>
+</form>
+</body>
+<script src="//static8.ziroom.com/phoenix/pc/js/2019/lib/jquery.SuperSlide.2.1.3.js"></script>
+<script src="//static8.ziroom.com/phoenix/pc/js/2019/info.js?2020020312105"></script>
+<script>
+    function sub() {
+        if (checkuser() & checkemail() & checkpassword() & checkname()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    function checkuser() {
+        if (document.getElementById("username").value.length > 0) {
+            return true;
+        } else {
+            document.getElementById("username_message").innerHTML = "<br/>请填写用户名";
+            return false;
+        }
+    }
+
+    function checkpassword() {
+        if (document.getElementById("password").value.length > 0) {
+            return true;
+        } else {
+            document.getElementById("password_message").innerHTML = "<br/>请填写密码";
+            return false;
+        }
+    }
+
+    function checkname() {
+        var name = document.getElementById("name").value;
+        if (name.length == 0 || name.length > 8) {
+            document.getElementById("name_message").innerHTML = "<br/>昵称不能为空且不能超过8位";
+            return false;
+        } else {
+            document.getElementById("name_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function checkemail() {
+        if (document.getElementById("email").value.length > 0) {
+            return true;
+        } else {
+            document.getElementById("email_message").innerHTML = "<br/>请填写邮箱";
+            return false;
+        }
+    }
+</script>
+</HTML>

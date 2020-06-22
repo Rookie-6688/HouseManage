@@ -1,0 +1,207 @@
+<HTML xmlns:th="http://www.thymeleaf.org">
+<HEAD>
+    <meta http-equiv="Content-Language" content="zh-cn">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <link th:href="@{assets/css/Style1.css}" rel="stylesheet" type="text/css"/>
+    <script type="text/javascript" th:src="@{assets/js/public.js}"></script>
+    <script type="text/javascript">
+        function addCollect() {
+            window.location.href = "/House/adminCollectAdd";
+        }
+    </script>
+</HEAD>
+<body>
+<br>
+<table cellSpacing="1" cellPadding="0" width="100%" align="center" bgColor="#f5fafe" border="0">
+    <TBODY>
+    <tr>
+        <td th:colspan="2" class="ta_01" align="center" bgColor="#afd1f3">
+            <strong>分类列表</strong>
+        </TD>
+    </tr>
+    <div style="color:#f00" align="center">[[${message}]]</div>
+    <tr>
+        <td class="ta_01" align="left">
+            房屋位置关键字:<input type="text" name="lcoation" id="location" placeholder="房屋位置"
+                           th:value="${vo}ne null?${vo.uid}:''">
+            用户昵称关键字：<input type="text" name="name" id="name" placeholder="用户名" th:value="${vo}ne null?${vo.name}:''">
+            <button type="button" id="search" name="search" value="查找" onclick="search1()">
+                查找
+            </button>
+        </td>
+        <td class="ta_01" align="right" colspan="2">
+            <button type="button" id="add" name="add" value="添加" class="button_add" onclick="addCollect()">
+                &#28155;&#21152;
+            </button>
+
+        </td>
+    </tr>
+    <tr>
+        <td class="ta_01" align="center" bgColor="#f5fafe" th:colspan="2">
+            <table cellspacing="0" cellpadding="1" rules="all"
+                   bordercolor="gray" border="1" id="DataGrid1"
+                   style="BORDER-RIGHT: gray 1px solid; BORDER-TOP: gray 1px solid; BORDER-LEFT: gray 1px solid; WIDTH: 100%; WORD-BREAK: break-all; BORDER-BOTTOM: gray 1px solid; BORDER-COLLAPSE: collapse; BACKGROUND-COLOR: #f5fafe; WORD-WRAP: break-word">
+                <tr
+                        style="FONT-WEIGHT: bold; FONT-SIZE: 12pt; HEIGHT: 25px; BACKGROUND-COLOR: #afd1f3">
+                    <td width="3%"><input type="checkbox" id="checkall">全选</td>
+                    <td align="center" width="15%">
+                        序号
+                    </td>
+                    <td align="center" width="10%">
+                        用户ID
+                    </td>
+                    <td align="center" width="10%">
+                        用户名
+                    </td>
+                    <td align="center" width="10%">
+                        房屋位置
+                    </td>
+                    <td align="center" width="10%">
+                        房屋类型
+                    </td>
+                    <td align="center" width="10%">
+                        房间号
+                    </td>
+                    <td width="7%" align="center">
+                        编辑
+                    </td>
+                    <td width="7%" align="center">
+                        删除
+                    </td>
+                </tr>
+                <tr onmouseover="this.style.backgroundColor = 'white'"
+                    onmouseout="this.style.backgroundColor = '#F5FAFE';" th:attr="dele_cid=${collect.cid}"
+                    th:each="collect,status:${pagemodel.list}">
+                    <td width="3%" style="text-align: center"><input type="checkbox" name="check"></td>
+                    <td style="CURSOR: hand; HEIGHT: 22px" align="center"
+                        width="15%">
+                        [[${status.count }]]
+                    </td>
+                    <td style="CURSOR: hand; HEIGHT: 22px" align="center"
+                        width="10%">
+                        [[${collect.user.uid}]]
+                    </td>
+                    <td style="CURSOR: hand; HEIGHT: 22px" align="center"
+                        width="10%">
+                        [[${collect.user.username}]]
+                    </td>
+                    <td style="CURSOR: hand; HEIGHT: 22px" align="center"
+                        width="10%">
+                        [[${collect.bedNumber.houses.location}]]
+                    </td>
+                    <td style="CURSOR: hand; HEIGHT: 22px" align="center"
+                        width="10%" th:text="${collect.bedNumber.houses.livetype}==0?'整租':'合租'">
+                    </td>
+                    <td style="CURSOR: hand; HEIGHT: 22px" align="center"
+                        width="10%" th:text="${collect.bedNumber.number}==0?'/':${collect.bedNumber.number}">
+                        [[${collect.bedNumber.number}]]
+                    </td>
+                    <td align="center" style="HEIGHT: 22px">
+                        <a th:href="@{'admineditcollect&cid='+${collect.cid}+'&page='+${page}}">
+                            <img th:src="@{assets/images/admin/img/admin/i_edit.gif}" border="0" style="CURSOR: hand">
+                        </a>
+                    </td>
+
+                    <td align="center" style="HEIGHT: 22px">
+                        <a href="#" th:attr="dele_url='admindeletecollect&cid='+${collect.cid}" name="dele">
+                            <img th:src="@{assets/images/admin/img/admin/i_del.gif}" width="16" height="16" border="0"
+                                 style="CURSOR: hand">
+                        </a>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="ta_01" align="left" colspan="2">
+            <button type="button" class="button_del" value="删除选中项" id="deleselect">删除选中项</button>
+        </td>
+    </tr>
+    </TBODY>
+</table>
+<div style="text-align:center">
+    第[[${pagemodel.currentPageNum}]]页/共[[${pagemodel.totalPageNum}]]页
+
+    <a th:href="@{${pagemodel.url}+'1'}">首页</a>
+    <a th:href="@{${pagemodel.url}+${pagemodel.prePageNum}}">上一页</a>
+    <a th:href="${pagemodel.url}+${n}" th:each="n:${#numbers.sequence(pagemodel.startPage,pagemodel.endPage)}">[[${n}]]&nbsp;&nbsp;&nbsp;&nbsp;</a>
+    <a th:href="@{${pagemodel.url}+${pagemodel.nextPageNum}}">下一页</a>
+    <a th:href="@{${pagemodel.url}+${pagemodel.totalPageNum}}">末页</a>
+    <input type="text" id="pagenum" name="pagenum" size="1"/><input type="button" value="前往" onclick="jump()"/>
+    <script type="text/javascript">
+        function jump() {
+            var totalpage = [[${pagemodel.totalPageNum}]];
+            var pagenum = document.getElementById("pagenum").value;
+            //判断输入的是一个数字
+            var reg = /^[1-9][0-9]{0,1}$/;
+            if (!reg.test(pagenum)) {
+                //不是一个有效数字
+                alert("请输入符合规定的数字");
+                return;
+            }
+            //判断输入的数字不能大于总页数
+            if (parseInt(pagenum) > parseInt(totalpage)) {
+                //超过了总页数
+                alert("不能大于总页数");
+                return;
+            }
+            //转向分页显示的Servlet
+            // alert(pagenum);
+            window.location.href = "/House/adminCollectManage&page=" + pagenum;
+        }
+    </script>
+</div>
+</body>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery-1.11.0.js}"></script>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery.min.js}"></script>
+<script src="assets/js/bootstrap.min.js" th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script>
+    $("[name='dele']").click(function () {
+        var url = $(this).attr("dele_url");
+        if (confirm("是否确定删除?")) {
+            window.location.href = "/House/" + url;
+        }
+    })
+
+
+    $("#checkall").click(function () {
+        $("input[type='checkbox']").prop("checked", this.checked);
+    });
+
+    $("#deleselect").click(function () {
+        var len = $("input[name='check']:checked").length;
+        if (len == 0) {
+            alert("请选择至少一条记录!");
+        } else {
+            if (confirm("是否确定删除选中项?")) {
+                var check_val = [];
+                var check = $("input[name='check']:checked");
+                check.each(function () {
+                    var row = $(this).parent("td").parent("tr");
+                    var cid = row.attr("dele_cid");
+                    // var cid=row.find("[name='cc']").value;
+                    check_val.push({cid: cid});
+                })
+                $.ajax({
+                    url: "/House/admindeleselect",
+                    data: {"data": JSON.stringify(check_val)},
+                    type: "post",
+                    success: function (data) {
+                        alert("删除成功!");
+                        window.location.reload();
+                    }
+                })
+            }
+        }
+    })
+</script>
+<script>
+    function search1() {
+        var location = $("#location").val();
+        var name = $("#name").val();
+        window.location.href = "/House/adminsearchcollect&location=" + location + "&name=" + name + "&page=" + [[${pagemodel.currentPageNum}]];
+
+    }
+</script>
+</HTML>
+

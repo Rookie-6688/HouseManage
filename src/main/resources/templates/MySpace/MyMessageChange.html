@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<!-- Bootstrap -->
+<link th:href="@{assets/css/bootstrap.css}" rel="stylesheet">
+<link th:href="@{assets/css/theme.css}" rel="stylesheet">
+<link th:href="@{assets/css/common.css}" rel="stylesheet">
+<link th:href="@{assets/css/my_zone.css}" rel="stylesheet">
+
+<body>
+<header id="site-header">
+    <div id="site-header-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="clearfix">
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="clearfix">
+                        <a class="btn btn-warning btn-lg header-btn hidden-sm" href="/login"
+                           th:if="${session.user}eq null" th:href="@{/login}">登陆</a>
+                        <a class="btn btn-warning btn-lg header-btn hidden-sm" href="/register"
+                           th:if="${session.user}eq null" th:href="@{/register}">注册</a>
+                        <div class="currency-in-header">
+                            <i class="fa fa-flag"></i>
+                            <label th:if="${session.user}eq null"> 当前状态：未登录 </label>
+                            <span th:if="${session.user}ne null" style="color: red;size: 5px">[[${session.user.name}]], 您好</span>
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a th:href="@{/loginout}" th:if="${session.user} ne null"
+                               style="color: blue;size:5px">切换用户</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-3">
+                <figure id="site-logo">
+                    <a href="index.html"><img th:src="@{/assets/images/logo3.jpg}" alt="Logo"></a>
+                </figure>
+            </div>
+            <div class="col-md-6 col-sm-8">
+                <nav id="site-nav" class="nav navbar-default">
+                    <ul class="nav navbar-nav">
+                        <li><a href="" th:href="@{/}"><font size="5">首页</font></a></li>
+                        <li><a href="search" th:href="@{/findhouse&roomtype=&high=-1&much=-1&livetype=-1&order=&num=1}"><font
+                                size="5">查找</font></a></li>
+                        <li><a href="MyMessage" th:href="@{/MyMessage}"><font size="5">个人信息</font></a></li>
+                    </ul>
+                </nav>
+            </div>
+            <div class="col-md-3 col-sm-4">
+                <div class="contact-in-header clearfix">
+                    <i class="fa fa-mobile"></i>
+                    <span>
+		                        	联系我们
+		                        <br>
+		                    <strong>187 9204 1765</strong>
+		                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="area zone_cont clearfix" style="position: relative; z-index: 1;">
+    <!--公告-->
+    <div class="slideLeft">
+        <ul>
+            <li class="myStore"><b></b><a th:href="@{/MyMessage}" th:class="active">个人资料</a></li>
+            <li class="myLook"><b></b><a th:href="@{/MyCollections}">我的收藏</a></li>
+            <li class="myContract"><b></b><a th:href="@{/myorder}">我的预约</a></li>
+        </ul>
+    </div><!--/l_aside-->
+
+    <div class="t_spacemainboxright" style="width: 1055px;">
+        <div class="ziroom_box_right">
+            <div class="ziroom_box_right_h  lh30">
+                <p style="color: red" th:text="${message}" th:if="${not #strings.isEmpty(message)}"></p>
+                <h3>修改信息</h3>
+            </div><!--ziroom_box_right_h -->
+            <div class="ziroom_box_right_c">
+                <span style="font-size: 5px;color: red">**如果不需要修改密码可以不填新密码和确认新密码</span>
+                <form th:action="@{/changemsg}" method="post" onsubmit="return over()">
+                    <table width="100%" th:height="400px" class="collect_sheet yuekan" border="1px solid">
+                        <tbody id="tbodytwo" style="text-align: center">
+                        <tr class="ttl_cs">
+                            <td class="td_firsr" width="100"><span style="font-size: 20px;color: blue;">种类</span></td>
+                            <td class="td_second" width="80" style="font-size: 20px;color: blue">修改后的内容</td>
+                            <td class="td_second" width="100"></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px">用户名(不可修改)</td>
+                            <td style="font-size: 15px"><p style="width: 100%;height: 100%;text-align: center"
+                                                           th:text="${session.user.username}"></p></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px">昵称</td>
+                            <td style="font-size: 15px"><input type="text" id="name" name="name"
+                                                               style="width: 100%;height: 100%;text-align: center"
+                                                               onkeyup="checkname()" th:value="${session.user.name}">
+                            </td>
+                            <td><span id="name_message" style="color:red;"
+                                      th:text="${namemsg}!=null?${namemsg}:''"></span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px">密码</td>
+                            <td style="font-size: 15px"><input type="password" id="password" name="password"
+                                                               onkeyup="checkpwd()"
+                                                               style="width: 1 0%;height: 100%;text-align: center"></td>
+                            <td style="border: 0px"><span id="pwd_message" style="color:red;"
+                                                          th:text="${msg}!=null?${msg}:''"></span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px">新密码(可不填)</td>
+                            <td style="font-size: 15px"><input type="password" id="newpassword" name="newpassword"
+                                                               onkeyup="checknewpwd()"
+                                                               style="width: 100%;height: 100%;text-align: center"></td>
+                            <td><span id="newpwd_message" style="color:red;"></span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px">确认新密码(可不填)</td>
+                            <td style="font-size: 15px"><input type="password" id="renewpassword" name="renewpassword"
+                                                               onkeyup="checkrenewpwd()"
+                                                               style="width: 100%;height: 100%;text-align: center"></td>
+                            <td><span id="renewpwd_message" style="color:red;"></span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px">电话</td>
+                            <td style="font-size: 15px"><input type="phone" name="phone" id="phone"
+                                                               style="width: 100%;height: 100%;text-align: center"
+                                                               th:value="${session.user.phone}" onkeyup="checkemail()">
+                            </td>
+                            <td style="border: 0px"><span id="email_message" style="color:red;"
+                                                          th:text="${emailmsg}!=null?${emailmsg}:''"></span></td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px">性别</td>
+                            <td style="font-size: 15px">
+                                <input type="radio" th:checked="${session.user.sex=='男'}" name="sex" value="男">男
+                                <input type="radio" th:checked="${session.user.sex=='女'}" name="sex" value="女">女
+                                <input type="radio" th:checked="${session.user.sex=='保密'}" name="sex" value="保密">保密
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px">星座</td>
+                            <td style="font-size: 15px">
+                                <select name="star" style="border: 1px solid black">
+                                    <option value="保密">保密</option>
+                                    <option value="白羊座" th:selected="${session.user.star=='白羊座'}">白羊座</option>
+                                    <option value="金牛座" th:selected="${session.user.star=='金牛座'}">金牛座</option>
+                                    <option value="双子座" th:selected="${session.user.star=='双子座'}">双子座</option>
+                                    <option value="巨蟹座" th:selected="${session.user.star=='巨蟹座'}">巨蟹座</option>
+                                    <option value="狮子座" th:selected="${session.user.star=='狮子座'}">狮子座</option>
+                                    <option value="处女座" th:selected="${session.user.star=='处女座'}">处女座</option>
+                                    <option value="天秤座" th:selected="${session.user.star=='天秤座'}">天秤座</option>
+                                    <option value="天蝎座" th:selected="${session.user.star=='天蝎座'}">天蝎座</option>
+                                    <option value="射手座" th:selected="${session.user.star=='射手座'}">射手座</option>
+                                    <option value="摩羯座" th:selected="${session.user.star=='摩羯座'}">摩羯座</option>
+                                    <option value="水瓶座" th:selected="${session.user.star=='水瓶座'}">水瓶座</option>
+                                    <option value="双鱼座" th:selected="${session.user.star=='双鱼座'}">双鱼座</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="font-size: 15px">职业</td>
+                            <td style="font-size: 15px">
+                                <select name="job" style="border: 1px solid black">
+                                    <option value="保密">保密</option>
+                                    <option value="软件程序设计" th:selected="${session.user.job=='软件程序设计'}">软件程序设计</option>
+                                    <option value="会计" th:selected="${session.user.job=='会计'}">会计</option>
+                                    <option value="销售" th:selected="${session.user.job=='销售'}">销售</option>
+                                    <option value="广告文案" th:selected="${session.user.job=='广告文案'}">广告文案</option>
+                                    <option value="其他" th:selected="${session.user.job=='其他'}">其他</option>
+                                </select>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <br>
+                    <div style="margin-right: 10px">
+                        <button class="btn btn-sm btn-danger" type="submit">提交</button>
+                    </div>
+                </form>
+                <!-- E 约看管理 -->
+            </div><!--ziroom_box_right_c -->
+
+
+        </div>
+    </div>
+
+</div><!--t_spacemainbox -->
+</body>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery-1.11.0.js}"></script>
+<script src="assets/js/jquery-1.11.0.js" th:src="@{/assets/js/jquery.min.js}"></script>
+<script src="assets/js/bootstrap.min.js" th:src="@{/assets/js/bootstrap.min.js}"></script>
+<script type="text/javascript">
+    function checkname() {
+        var name = document.getElementById("name").value;
+        if (name.length == 0 || name.length > 8) {
+            document.getElementById("name_message").innerHTML = "<br/>昵称不能为空且不能超过8位";
+            return false;
+        } else {
+            document.getElementById("name_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function checkpwd() {
+        var pwd = document.getElementById("password").value;
+        if (pwd.length == 0) {
+            document.getElementById("pwd_message").innerHTML = "<br/>请输入密码";
+            return false;
+        } else {
+            document.getElementById("pwd_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function checkemail() {
+        var email = document.getElementById("email").value;
+        if (email.length == 0) {
+            document.getElementById("email_message").innerHTML = "<br/>邮箱不能为空";
+            return false;
+        } else {
+            document.getElementById("email_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function checknewpwd() {
+        var pattern = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{5,13}$/;
+        var pwd = document.getElementById("newpassword").value;
+        if (!pattern.test(pwd)) {
+            document.getElementById("newpwd_message").innerHTML = "<br/>新密码长度必须在5到13位且必须为数字字母组合";
+            return false;
+        } else {
+            document.getElementById("newpwd_message").innerHTML = "";
+            return true;
+        }
+    }
+
+    function checkrenewpwd() {
+        var pwd = document.getElementById("newpassword").value;
+        var repwd = document.getElementById("renewpassword").value;
+        if (pwd == repwd) {
+            document.getElementById("renewpwd_message").innerHTML = "";
+            return true;
+        } else {
+            document.getElementById("renewpwd_message").innerHTML = "<br/>确认密码必须与新密码一致";
+            return false;
+        }
+    }
+
+    function over() {
+        var i1 = document.getElementById("newpassword").value.length == 0 ? true : false;
+        var i2 = document.getElementById("renewpassword").value.length == 0 ? true : false;
+        if (checkname() && checkpwd() && i1 && i2 && checkemail()) {
+            return true;
+        } else if (!checkemail()) {
+            return false;
+        } else if (checkname() && checkpwd() && checknewpwd() && checkrenewpwd() && checkemail()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>
+</html>
