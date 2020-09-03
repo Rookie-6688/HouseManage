@@ -13,6 +13,7 @@ import org.apache.shiro.session.Session;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -65,7 +66,9 @@ public class UserRealm extends AuthorizingRealm {
     }
 
     /**
-     * 用户认证的方法，在需要登陆验证时自动被调用（也就是登陆时会调用）
+     * 用户认证的方法，在需要登陆验证时自动被调用（也就是登陆时会调用），
+     * 主要作用是如果用户名密码正确就为容器添加用户信息，但是并没有为subject添加权限或授权，紧接着就会调用上面的zation方法来添加权限和授权，
+     * 也就是下面只是添加用户信息到容器中，真正的授权是上面方法。
      * @param AuthenticationToken
      * @return
      */

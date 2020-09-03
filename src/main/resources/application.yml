@@ -35,4 +35,6 @@ mybatis:
 
   mybatis:
     configuration:
-      call-setters-on-nulls: true #设置返回字段不为空，前端不报错
+      call-setters-on-nulls: true     #设置返回字段不为空，前端不报错
+#  configuration:
+#    map-underscore-to-camel-case: true    #设置数据库字段与实体类属性的驼峰匹配

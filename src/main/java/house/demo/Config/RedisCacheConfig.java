@@ -20,8 +20,8 @@ public class RedisCacheConfig {
     //过期时间
     private Duration timeToLive = Duration.ofDays(1);
 
-    @Bean
-    public RedisTemplate<String, Object> RedisTemplate(
+//    @Bean
+    public RedisTemplate<String, Object> RedisTemplate(         //解决redis存储时乱码问题
             RedisConnectionFactory redisConnectionFactory)
             throws UnknownHostException {
         RedisTemplate<String, Object> template = new RedisTemplate<>();
@@ -43,7 +43,7 @@ public class RedisCacheConfig {
     }
 
     @Bean
-    public CacheManager cacheManager(RedisConnectionFactory factory) {
+    public CacheManager cacheManager(RedisConnectionFactory factory) {      //使对象能正确显示在redis中
         // 配置序列化
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig().entryTtl(timeToLive)
                 .serializeKeysWith(RedisSerializationContext.SerializationPair.fromSerializer(keySerializer()))

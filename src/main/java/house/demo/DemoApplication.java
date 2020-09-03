@@ -12,7 +12,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @MapperScan(value = "house.demo.Mapper")
 //@ImportResource(locations={"classpath:kaptchaConfig.xml"})
-//@EnableCaching
+@EnableCaching
 @SpringBootApplication
 public class DemoApplication  extends SpringBootServletInitializer {
 

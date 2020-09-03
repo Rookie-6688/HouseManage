@@ -34,7 +34,7 @@ public class SmsDemo {
 
     // TODO 此处需要替换成开发者自己的AK(在阿里云访问控制台寻找)
     static final String accessKeyId = "";
-    static final String accessKeySecret = ";
+    static final String accessKeySecret = "";
 
     public static SendSmsResponse sendSms(String phone) throws ClientException {
         String code=UUID.randomUUID().toString().substring(0,4);

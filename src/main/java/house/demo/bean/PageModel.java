@@ -1,9 +1,10 @@
 package house.demo.bean;
 
 
+import java.io.Serializable;
 import java.util.List;
 
-public class PageModel {
+public class PageModel implements Serializable {
     //基本属性
     private int currentPageNum;//当前页数，由用户指定				*
     private int pageSize = 5;//每页显示的条数，固定的				*
